@@ -1,1 +1,12 @@
-/target/
+# eclipse
+.project
+.classpath
+.settings/
+
+# maven
+target
+
+*.swp
+*.swo
+*.swn
+revision.txt
