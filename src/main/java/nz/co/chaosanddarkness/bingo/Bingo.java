@@ -8,14 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.Data;
-import nz.co.chaosanddarkness.bingo.Board.Line;
 import org.apache.commons.io.IOUtils;
 
 @Data
 public class Bingo {
 
     private BingoRun run;
-    private List<Board> boards;
+    private Board[] boards;
     private Integer lastNumberCalled;
 
     public Bingo(InputStream stream) {
@@ -37,7 +36,7 @@ public class Bingo {
     }
 
     @VisibleForTesting
-    static List<Board> boards(List<String> lines) {
+    static Board[] boards(List<String> lines) {
         List<Board> boards = new ArrayList<>();
         List<String> boardLines = null;
         while (lines.size() > 0) {
@@ -46,20 +45,19 @@ public class Bingo {
             boards.add(board(boardLines));
             lines = lines.subList(boardLines.size(), lines.size());
         }
-        return boards;
+        return boards.toArray(new Board[]{});
     }
 
     @VisibleForTesting
     static Board board(List<String> lines) {
-        return new Board(lines.stream().map(Bingo::boardLine).collect(Collectors.toList()));
+        return new Board(lines.stream().map(Bingo::boardLine).collect(Collectors.toList()).toArray(new Integer[][]{}));
     }
 
     @VisibleForTesting
-    static Line boardLine(String line) {
-        return new Line(
-                List.of(line.trim().split("\\s+")).stream()
+    static Integer[] boardLine(String line) {
+        return List.of(line.trim().split("\\s+")).stream()
                 .map(Integer::parseInt)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList()).toArray(new Integer[]{});
     }
 
     @VisibleForTesting
@@ -93,7 +91,7 @@ public class Bingo {
     }
 
     public Integer winningBoardRemainingNumbersTotal() {
-        return boards.stream().filter(Board::bingo).mapToInt(Board::remainingNumbers).sum();
+        return List.of(boards).stream().filter(Board::bingo).mapToInt(Board::remainingNumbers).sum();
     }
 
     public Integer winningScore() {
@@ -113,12 +111,12 @@ public class Bingo {
     }
 
     public Integer playToLose() {
-        Integer[] lastNumberCalled = new Integer[boards.size()];
-        Integer[] numberOfStrikes = new Integer[boards.size()];
-        for (int i = 0; i < boards.size(); i ++) {
+        Integer[] lastNumberCalled = new Integer[boards.length];
+        Integer[] numberOfStrikes = new Integer[boards.length];
+        for (int i = 0; i < boards.length; i ++) {
             lastNumberCalled[i] = 0;
             numberOfStrikes[i] = 0;
-            Board board = boards.get(i);
+            Board board = boards[i];
             for (Integer number : run.getNumbers()) {
                 board.strike(number);
                 if (board.bingo()) {
@@ -129,11 +127,11 @@ public class Bingo {
             }
         }
         int loserIndex = -1;
-        for (int i = 0; i < boards.size(); i++) {
+        for (int i = 0; i < boards.length; i++) {
             if (loserIndex == -1 || numberOfStrikes[i] > numberOfStrikes[loserIndex]) {
                 loserIndex = i;
             }
         }
-        return lastNumberCalled[loserIndex] * boards.get(loserIndex).remainingNumbers();
+        return lastNumberCalled[loserIndex] * boards[loserIndex].remainingNumbers();
     }
 }

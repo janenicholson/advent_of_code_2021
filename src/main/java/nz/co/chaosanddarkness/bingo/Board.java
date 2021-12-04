@@ -1,39 +1,35 @@
 package nz.co.chaosanddarkness.bingo;
 
 import com.google.common.annotations.VisibleForTesting;
-import java.util.List;
 import lombok.Data;
 
 @Data
 public class Board {
-    private final List<Board.Line> boardLines;
+    private final Integer[][] boardLines;
     private final Integer[][] mask;
 
-    public Board(List<Board.Line> boardLines) {
+    public Board(Integer[][] boardLines) {
         this.boardLines = boardLines;
-        this.mask = new Integer[boardLines.size()][boardLines.size()];
+        this.mask = new Integer[boardLines.length][boardLines.length];
         setMaskToOnes();
     }
 
     private void setMaskToOnes() {
-        for (int i = 0; i < boardLines.size(); i++) {
-            for (int j = 0; j < boardLines.size(); j++) {
+        for (int i = 0; i < boardLines.length; i++) {
+            for (int j = 0; j < boardLines.length; j++) {
                 mask[i][j] = 1;
             }
         }
     }
 
-    @Data
-    public static class Line {
-        private final List<Integer> numbers;
-    }
-
     public void strike(Integer number) {
-        for (Line line : boardLines) {
-            int index = line.getNumbers().indexOf(number);
-            if (index >= 0) {
-                mask[boardLines.indexOf(line)][index] = 0;
-            };
+        for (int i = 0; i < boardLines.length; i++) {
+            for (int j = 0; j < boardLines.length; j++) {
+                if (boardLines[i][j] == number) {
+                    mask[i][j] = 0;
+                    return;
+                }
+            }
         }
     }
 
@@ -44,9 +40,9 @@ public class Board {
     @VisibleForTesting
     boolean anyLineIsZeroes() {
         boolean anyLineIsBingo = false;
-        for (int i = 0; i < boardLines.size(); i++) {
+        for (int i = 0; i < boardLines.length; i++) {
             boolean lineIsBingo = true;
-            for (int j = 0; j < boardLines.size(); j++) {
+            for (int j = 0; j < boardLines.length; j++) {
                 lineIsBingo &= mask[i][j] == 0;
             }
             anyLineIsBingo |= lineIsBingo;
@@ -57,9 +53,9 @@ public class Board {
     @VisibleForTesting
     boolean anyColumnIsZeroes() {
         boolean anyLineIsBingo = false;
-        for (int i = 0; i < boardLines.size(); i++) {
+        for (int i = 0; i < boardLines.length; i++) {
             boolean lineIsBingo = true;
-            for (int j = 0; j < boardLines.size(); j++) {
+            for (int j = 0; j < boardLines.length; j++) {
                 lineIsBingo &= mask[j][i] == 0;
             }
             anyLineIsBingo |= lineIsBingo;
@@ -69,9 +65,9 @@ public class Board {
 
     Integer remainingNumbers() {
         int sum = 0;
-        for (int i = 0; i < boardLines.size(); i++) {
-            for (int j = 0; j < boardLines.size(); j++) {
-                sum += mask[i][j] * boardLines.get(i).getNumbers().get(j);
+        for (int i = 0; i < boardLines.length; i++) {
+            for (int j = 0; j < boardLines.length; j++) {
+                sum += mask[i][j] * boardLines[i][j];
             }
         }
         return sum;

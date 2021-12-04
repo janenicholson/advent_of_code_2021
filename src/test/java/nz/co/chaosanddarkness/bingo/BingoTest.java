@@ -1,8 +1,9 @@
 package nz.co.chaosanddarkness.bingo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
@@ -32,17 +33,17 @@ public class BingoTest {
     @Test
     public void split_line_into_integers() {
         String line = "22 13 17 11  0";
-        assertThat(Bingo.boardLine(line).getNumbers(), contains(22,13,17,11,0));
+        assertThat(Bingo.boardLine(line), arrayContaining(22,13,17,11,0));
     }
 
     @Test
     public void load_bingo_boards() throws IOException {
         Bingo bingo = new Bingo(BingoTest.class.getResourceAsStream("bingo.txt"));
-        assertThat(bingo.getBoards(), hasSize(3));
-        assertThat(bingo.getBoards().get(0).getBoardLines(), hasSize(5));
-        assertThat(bingo.getBoards().get(0).getBoardLines().get(0).getNumbers(), contains(22,13,17,11,0));
-        assertThat(bingo.getBoards().get(2).getBoardLines(), hasSize(5));
-        assertThat(bingo.getBoards().get(2).getBoardLines().get(4).getNumbers(), contains(2,0,12,3,7));
+        assertThat(bingo.getBoards(), arrayWithSize(3));
+        assertThat(bingo.getBoards()[0].getBoardLines(), arrayWithSize(5));
+        assertThat(bingo.getBoards()[0].getBoardLines()[0], arrayContaining(22,13,17,11,0));
+        assertThat(bingo.getBoards()[2].getBoardLines(), arrayWithSize(5));
+        assertThat(bingo.getBoards()[2].getBoardLines()[4], arrayContaining(2,0,12,3,7));
     }
 
     @Test

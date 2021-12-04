@@ -3,7 +3,6 @@ package nz.co.chaosanddarkness.bingo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import java.util.List;
 import org.junit.Test;
 
 public class BoardTest {
@@ -37,13 +36,13 @@ public class BoardTest {
     }
 
     private Board constructBoard() {
-        return new Board(List.of(
-                new Board.Line(List.of(1, 2, 3, 4, 5)),
-                new Board.Line(List.of(6, 7, 8, 9, 10)),
-                new Board.Line(List.of(11, 12, 13, 14, 15)),
-                new Board.Line(List.of(16, 17, 18, 19, 20)),
-                new Board.Line(List.of(21, 22, 23, 24, 25))
-                ));
+        return new Board(new Integer[][] {
+                new Integer[]{1, 2, 3, 4, 5},
+                new Integer[]{6, 7, 8, 9, 10},
+                new Integer[]{11, 12, 13, 14, 15},
+                new Integer[]{16, 17, 18, 19, 20},
+                new Integer[]{21, 22, 23, 24, 25}
+        });
     }
 
 }
