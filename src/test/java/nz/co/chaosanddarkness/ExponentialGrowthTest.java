@@ -1,14 +1,7 @@
 package nz.co.chaosanddarkness;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.junit.Test;
 
